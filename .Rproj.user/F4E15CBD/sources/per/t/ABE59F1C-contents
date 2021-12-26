@@ -1,0 +1,58 @@
+---
+title: "EDA"
+author: "Tuozhen Liu"
+date: "12/25/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+check_unique <- function(df){
+  df %>%
+    summarise_all(n_distinct) %>%
+    mutate(nrow = nrow(df), .before = 1)
+}
+
+# ggthemr::ggthemr_reset()
+```
+
+# The Basics
+
+## MTeams.csv
+```{r}
+teams <- read.csv("../01_data/MDataFiles_Stage2/MTeams.csv")
+head(teams)
+check_unique(teams)
+
+teams %>% filter(LastD1Season == 2021) %>% pull(TeamName) -> teams_2021
+teams_2021 %>% length()
+```
+
+## MNCAATourneySeeds.csv
+
+```{r}
+seeds <- read.csv("../01_data/MDataFiles_Stage2/MNCAATourneySeeds.csv")
+head(seeds)
+check_unique(seeds)
+```
+
+## MMasseyOrdinals.csv
+
+```{r}
+MasseyOrdinals <- read.csv("../01_data/MDataFiles_Stage2/MMasseyOrdinals.csv")
+head(MasseyOrdinals)
+check_unique(MasseyOrdinals)
+
+MasseyOrdinals %>%
+  group_by(SystemName) %>%
+  summarise(count = n()) %>%
+  slice_max(count, n = 10) %>%
+  left_join(MasseyOrdinals, by = "SystemName") %>%
+  ggplot(aes(x = SystemName, fill = factor(Season))) +
+    geom_bar(position = "stack") +
+    coord_flip()
+
+```
+

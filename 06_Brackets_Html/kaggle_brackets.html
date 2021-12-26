@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <title>Kaggle Brackets</title>
+    <link rel="stylesheet" href="../observable_demo.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+		<meta property="og:type" content="website" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-166099887-1"></script>
+		<script>
+  		window.dataLayer = window.dataLayer || [];
+  		function gtag(){dataLayer.push(arguments);}
+  		gtag('js', new Date());
+			gtag('config', 'UA-166099887-1');
+		</script>
+    <!-- <style media="screen">
+      body {
+        font-size: 14px;
+        color: black;
+      }
+      .championship {
+        font-size: 22px
+      }
+    </style> -->
+  </head>
+  <body>
+    <h1>Visualize your Kaggle Brackets</h1>
+
+    <div id="observablehq-topmatter-2389af7c"></div>
+    <div style="margin-bottom:10px;">
+      If you'd just like to browse past tournaments, you can do so on <a href="index.html">this web page</a>.
+    </div>
+    <div id="observablehq-input-2389af7c"></div>
+    <div id="observablehq-log_loss_display-2389af7c"></div>
+    <div style="color:black;" id="observablehq-brackets-2389af7c"></div>
+    <div id="observablehq-style-2389af7c"></div>
+    <div id="observablehq-styles-2389af7c"></div>
+
+    <script type="module">
+    import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+    import define from "https://api.observablehq.com/@mcmcclur/visualize-your-kaggle-brackets-for-march-madness.js?v=3";
+    new Runtime().module(define, name => {
+      if (name === "topmatter") return new Inspector(document.querySelector("#observablehq-topmatter-2389af7c"));
+      if (name === "input") return new Inspector(document.querySelector("#observablehq-input-2389af7c"));
+      if (name === "log_loss_display") return new Inspector(document.querySelector("#observablehq-log_loss_display-2389af7c"));
+      if (name === "brackets") return new Inspector(document.querySelector("#observablehq-brackets-2389af7c"));
+      if (name === "style") return new Inspector(document.querySelector("#observablehq-style-2389af7c"));
+      if (name === "styles") return new Inspector(document.querySelector("#observablehq-styles-2389af7c"));
+    });
+    </script>
+  </body>
+</html>

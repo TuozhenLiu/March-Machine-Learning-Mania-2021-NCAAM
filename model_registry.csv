@@ -1,0 +1,22 @@
+type_of_model,mode,regression_formula,grid_size,notes,model_performance,performance_measure,best_params,grid,id
+random_forest,classification,formula.all_reg,3,test,0.556831424,kaggle,"mtry:74, trees:586, min_n:37",NA,NA
+random_forest,classification,formula.all_reg,27,building classification baseline model for importance plot,0.541742824,kaggle,"mtry:10, trees:500, min_n:100","mtry = c(10, 50, 100), trees = c(100, 500, 1000), min_n = c(10, 50, 100)",NA
+random_forest,regression,formula.all_reg,27,building regression baseline model for importance plot,11.35488728,rmse,"mtry:10, trees:1000, min_n:50","mtry = c(10, 50, 100), trees = c(100, 500, 1000), min_n = c(10, 50, 100)",NA
+linear_reg,regression,formula.all_reg,1,linear regression,11.3245567,rmse,NA,random,1
+linear_reg,regression,formula.tier1_reg,1,linear regression,11.39183721,rmse,NA,random,2
+linear_reg,regression,formula.tier2_reg,1,linear regression,11.24499705,rmse,NA,random,3
+ridge_reg,regression,formula.all_reg,100,ridge regression,11.0880606,rmse,penalty:3.5,"penalty = seq(0.1, 0.1, 10)",1
+ridge_reg,regression,formula.tier1_reg,100,ridge regression,11.18010279,rmse,penalty:0.1,"penalty = seq(0.1, 0.1, 10)",2
+ridge_reg,regression,formula.tier2_reg,100,ridge regression,11.08394636,rmse,penalty:3.6,"penalty = seq(0.1, 0.1, 10)",3
+lasso_reg,regression,formula.all_reg,100,ridge regression,11.09432344,rmse,penalty:0.11,"penalty = seq(0.01, 1, 0.01)",1
+lasso_reg,regression,formula.tier1_reg,101,ridge regression,11.18495219,rmse,penalty:0.02,"penalty = seq(0, 1, 0.01)",2
+lasso_reg,regression,formula.tier2_reg,101,ridge regression,11.09400394,rmse,penalty:0.14,"penalty = seq(0, 1, 0.01)",3
+random_forest,classification,formula.all_cls,27,random_forest regression,0.554744321,mn_log_loss,"mtry:5, trees:500, min_n:50","mtry = c(1, 3, 5), trees = c(500, 1000, 1500), min_n = c(50, 100, 150)",1
+random_forest,classification,formula.tier1_cls,27,random_forest regression,0.552768507,mn_log_loss,"mtry:1, trees:1000, min_n:100","mtry = c(1, 3, 5), trees = c(500, 1000, 1500), min_n = c(50, 100, 150)",2
+random_forest,classification,formula.tier2_cls,27,random_forest regression,0.553915348,mn_log_loss,"mtry:5, trees:1500, min_n:50","mtry = c(1, 3, 5), trees = c(500, 1000, 1500), min_n = c(50, 100, 150)",3
+boost_tree,classification,formula.all_cls,50,xgboost,0.563218689,mn_log_loss,"mtry:68, trees:395, min_n:32, tree_depth:11, learn_rate:0.0293550733512085, loss_reduction:3.06705197056268e-06, sample_size:0.566516400825232",random,1
+boost_tree,classification,formula.tier1_cls,50,xgboost,0.563317629,mn_log_loss,"mtry:16, trees:395, min_n:32, tree_depth:11, learn_rate:0.0293550733512085, loss_reduction:3.06705197056268e-06, sample_size:0.566516400825232",random,2
+boost_tree,classification,formula.tier2_cls,50,xgboost,0.562804673,mn_log_loss,"mtry:60, trees:395, min_n:32, tree_depth:11, learn_rate:0.0293550733512085, loss_reduction:3.06705197056268e-06, sample_size:0.566516400825232",random,3
+log_reg,classification,formula.all_cls,121,log_reg,0.551098874,mn_log_loss,"penalty:0.1, mixture:0","penalty = seq(0, 1, 0.1), mixture = seq(0, 1, 0.1)",1
+log_reg,classification,formula.tier1_cls,121,log_reg,0.554030191,mn_log_loss,"penalty:0, mixture:0","penalty = seq(0, 1, 0.1), mixture = seq(0, 1, 0.1)",2
+log_reg,classification,formula.tier2_cls,121,log_reg,0.549475287,mn_log_loss,"penalty:0.1, mixture:0","penalty = seq(0, 1, 0.1), mixture = seq(0, 1, 0.1)",3

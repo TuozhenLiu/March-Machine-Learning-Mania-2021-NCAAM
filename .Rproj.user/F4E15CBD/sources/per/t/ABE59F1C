@@ -1,0 +1,29 @@
+{
+    "id": "ABE59F1C",
+    "path": "~/Desktop/CUFE/大数据分析统计基础/Final/NCAAM/02_scripts/EDA.Rmd",
+    "project_path": "02_scripts/EDA.Rmd",
+    "type": "r_markdown",
+    "hash": "1273571525",
+    "contents": "",
+    "dirty": false,
+    "created": 1640444484536.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "55,0",
+        "scrollLine": "0",
+        "docOutlineVisible": "1",
+        "last_setup_crc32": ""
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1640448629,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1640448629291,
+    "read_only": false,
+    "read_only_alternatives": []
+}
