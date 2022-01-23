@@ -20,3 +20,9 @@ boost_tree,classification,formula.tier2_cls,50,xgboost,0.562804673,mn_log_loss,"
 log_reg,classification,formula.all_cls,121,log_reg,0.551098874,mn_log_loss,"penalty:0.1, mixture:0","penalty = seq(0, 1, 0.1), mixture = seq(0, 1, 0.1)",1
 log_reg,classification,formula.tier1_cls,121,log_reg,0.554030191,mn_log_loss,"penalty:0, mixture:0","penalty = seq(0, 1, 0.1), mixture = seq(0, 1, 0.1)",2
 log_reg,classification,formula.tier2_cls,121,log_reg,0.549475287,mn_log_loss,"penalty:0.1, mixture:0","penalty = seq(0, 1, 0.1), mixture = seq(0, 1, 0.1)",3
+random_forest,regression,formula.all_reg,27,random_forest reg,11.149106480445958,rmse,"mtry:5, trees:1000, min_n:50",random,1
+random_forest,regression,formula.tier1_reg,27,random_forest reg,11.160342709985004,rmse,"mtry:3, trees:1500, min_n:100",random,2
+random_forest,regression,formula.tier2_reg,27,random_forest reg,11.141404607433772,rmse,"mtry:5, trees:1500, min_n:50",random,3
+boost_tree,regression,formula.tier2_reg,50,xgboost reg,11.397279374582537,rmse,"mtry:64, trees:275, min_n:11, tree_depth:3, learn_rate:0.0575668643685383, loss_reduction:2.36466623492823e-08, sample_size:0.949235056310426",random,3
+boost_tree,regression,formula.tier1_reg,50,xgboost reg,11.12986159071136,rmse,"mtry:8, trees:457, min_n:15, tree_depth:2, learn_rate:0.0291819589458032, loss_reduction:5.28376514524418e-06, sample_size:0.316080434834119",random,2
+boost_tree,regression,formula.all_reg,50,xgboost reg,11.21464464332287,rmse,"mtry:22, trees:766, min_n:2, tree_depth:9, learn_rate:0.00505045082258299, loss_reduction:4.01848092315667e-08, sample_size:0.311156726883724",random,1

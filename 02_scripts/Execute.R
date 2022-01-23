@@ -1,4 +1,5 @@
 library(tidyverse)
+library(vip)
 source("02_scripts/Utils.R")
 
 list(
@@ -21,34 +22,34 @@ output <- register_make_execute_evaluate(
   # type_of_model = "linear_reg",
   # type_of_model = "ridge_reg",
   # type_of_model = "lasso_reg",
-  type_of_model = "log_reg",
+  # type_of_model = "log_reg",
   # type_of_model = "random_forest",
-  # type_of_model = "boost_tree",
-  mode = "classification",
-  # mode = "regression",
-  # regression_formula = "formula.all_cls",
-  # regression_formula = "formula.tier1_cls",
-  regression_formula = "formula.tier2_cls",
+  type_of_model = "boost_tree",
+  # mode = "classification",
+  mode = "regression",
+  regression_formula = "formula.all_reg",
+  # regression_formula = "formula.tier1_reg",
+  # regression_formula = "formula.tier2_reg",
   v = 5,
   # use_bayes = T,
   grid_size = 50,
-  grid = expand.grid(penalty = seq(0, 1, 0.1), mixture = seq(0, 1, 0.1)),
+  # grid = expand.grid(penalty = seq(0, 1, 0.1), mixture = seq(0, 1, 0.1)),
   # grid = expand.grid(mtry = c(1, 3, 5), trees = c(500, 1000, 1500), min_n = c(50, 100, 150)),
   # grid = expand.grid(mtry = c(1, 5), trees = c(500, 1000), min_n = c(50, 100), tree_depth = c(5, 10),
   #                    learn_rate = c(1e-03, 1e-04), loss_reduction = tune(), sample_size = tune()),
   grid_notes = "random",
-  notes = "xgboost",
+  notes = "xgboost reg",
   # prediction_data = model_data$Test,
   prediction_data = stage_2_submission_data,
-  id = 3,
+  id = 1,
   save_mode = T,
-  seed = 1234
+  seed = 1235
 )
 
 output$show_best %>% View()
-output$show_best %>% write.csv("04_output/boost_tree_grid_all_show_best.csv")
-output$show_best %>% write.csv("04_output/log_reg_grid_tier1_show_best.csv")
-output$show_best %>% write.csv("04_output/log_reg_grid_tier2_show_best.csv")
+output$show_best %>% write.csv("04_output/xgboost_reg_grid_all_show_best.csv")
+output$show_best %>% write.csv("04_output/xgboost_reg_grid_tier1_show_best.csv")
+output$show_best %>% write.csv("04_output/xgboost_reg_grid_tier2_show_best.csv")
 
 read.csv("model_registry.csv") %>% View()
 
@@ -72,6 +73,9 @@ importance.plot <- function(output){
 }
 
 importance.plot(output)
+
+model <- output$final_model$fit$fit$fit
+
 
 
 importance <- importance(output$final_model$fit$fit$fit)

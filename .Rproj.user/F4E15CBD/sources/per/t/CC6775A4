@@ -1,6 +1,6 @@
 {
     "id": "CC6775A4",
-    "path": "~/Desktop/CUFE/大数据分析统计基础/Final/NCAAM/evaluate.R",
+    "path": "~/Desktop/CUFE/统计计算/Final/NCAAM/evaluate.R",
     "project_path": "evaluate.R",
     "type": "r_source",
     "hash": "91767807",
@@ -8,12 +8,12 @@
     "dirty": false,
     "created": 1640520234875.0,
     "source_on_save": false,
-    "relative_order": 5,
+    "relative_order": 4,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "34,27",
-        "scrollLine": "25"
+        "cursorPosition": "44,0",
+        "scrollLine": "0"
     },
     "folds": "",
     "lastKnownWriteTime": 1640531574,

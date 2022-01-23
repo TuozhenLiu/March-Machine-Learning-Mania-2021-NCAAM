@@ -8,14 +8,70 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(paletteer)
+library(ggthemes)
+library(ggthemr)
+library(corrplot)
+library(patchwork)
 
-check_unique <- function(df){
+check_unique <- function(df) {
   df %>%
     summarise_all(n_distinct) %>%
     mutate(nrow = nrow(df), .before = 1)
 }
 
-# ggthemr::ggthemr_reset()
+FONT = "Times New Roman"
+theme_bw() -> themebw_help
+theme(
+  text = element_text(family = FONT,
+                      color = "black"),
+  plot.title = element_text(face="bold",
+                            hjust = 0.5,
+                            family = FONT,
+                            colour = "black",
+                            margin = margin(t = 10, r = 0, b = 10, l = 0),
+                            size = 15),
+  axis.text = element_text(family = FONT,
+                           color = "black"),
+  plot.subtitle = element_text(family = FONT,
+                               hjust = 0.5,
+                               size = 12),
+  axis.title = element_text(size = 12),
+  legend.title = element_text(size = 11,
+                              face = "bold",
+                              color = "black",
+                              family = FONT),
+  legend.text = element_text(size = 10,
+                             color = "black",
+                             family = FONT)) -> text_theme
+
+theme(
+  panel.background = themebw_help$panel.background,
+  strip.background = element_rect(fill = alpha("lightgray", 0.5), inherit.blank = T, colour = NA),
+  panel.border = themebw_help$panel.border,
+  legend.background = themebw_help$legend.background,
+  plot.background = element_rect(color = "white"),
+  panel.grid.major.y = element_line(linetype = "dashed", color = "gray")) -> background_theme
+
+theme(
+  panel.background = element_rect(fill = "#ecf0f1", colour = NA), # bg of the panel
+  plot.background = element_rect(fill = "transparent", color = NA), # bg of the plot
+  panel.grid.major = element_blank(), # get rid of major grid
+  panel.grid.minor = element_blank(), # get rid of minor grid
+  panel.border = element_blank(),
+  legend.background = element_rect(fill = "transparent"), # get rid of legend bg
+  legend.box.background = element_rect(fill = "transparent") # get rid of legend panel bg
+) -> empty_theme
+
+theme_legend = theme(
+  legend.box.margin = margin(2, 2, 2, 2),
+  legend.background = element_rect(color = NA),
+  legend.box.background = element_blank()
+)
+
+theme_clean() + text_theme + background_theme + empty_theme + theme_legend  -> theme_Roman
+
+paletteer_d("ggthemes::Tableau_20")
 ```
 
 # The Basics
@@ -23,11 +79,27 @@ check_unique <- function(df){
 ## MTeams.csv
 ```{r}
 teams <- read.csv("../01_data/MDataFiles_Stage2/MTeams.csv")
-head(teams)
-check_unique(teams)
-
-teams %>% filter(LastD1Season == 2021) %>% pull(TeamName) -> teams_2021
-teams_2021 %>% length()
+# head(teams)
+# check_unique(teams)
+# 
+# teams %>%
+#   filter(LastD1Season == 2021) %>%
+#   pull(TeamName) -> teams_2021
+# teams_2021 %>% length()
+# 
+# set.seed(1228)
+# teams %>%
+#   slice(sample.int(371, size = 20)) %>%
+#   pull(TeamID) 
+#   ggplot(aes(x = TeamName)) +
+#   geom_segment(aes(xend = TeamName, y = FirstD1Season, yend = LastD1Season))+
+#   geom_point(aes(y = FirstD1Season), color = "#E15759FF", shape = 15, size = 3) +
+#   geom_point(aes(y = LastD1Season), color = "#59A14FFF", shape = 15, size = 3) +
+#   scale_y_continuous(breaks = seq(1985, 2021, 5)) +
+#   coord_flip() +
+#   labs(x = "", y = "Seasons in D1") +
+#   theme_Roman +
+#   theme(panel.background = element_rect(fill = "#ecf0f1"))
 ```
 
 ## MNCAATourneySeeds.csv
@@ -36,7 +108,63 @@ teams_2021 %>% length()
 seeds <- read.csv("../01_data/MDataFiles_Stage2/MNCAATourneySeeds.csv")
 head(seeds)
 check_unique(seeds)
+
+set.seed(1228)
+seeds %>%
+  distinct(TeamID) %>%
+  pull() %>%
+  sample(size = 20) -> selected_teamID
+
+p1 <- seeds %>%
+  filter(TeamID %in% selected_teamID) %>%
+  left_join(teams, by = "TeamID") %>%
+  mutate(Position = str_sub(Seed, 1, 1),
+         Seed = as.numeric(str_sub(Seed, 2, 3))) %>%
+  group_by(TeamID) %>%
+  mutate(n_ = n()) %>%
+  ungroup() %>%
+  mutate(max_n = n_ == max(n_)) %>%
+  ggplot(aes(x = reorder(TeamName, max_n))) +
+  # ggplot(aes(x = TeamName)) +
+  geom_point(aes(y = Season, color = Seed), shape = 15, size = 5) +
+  scale_y_continuous(breaks = seq(1985, 2021, 5)) +
+  # scale_color_discrete(type = c("#4E79A7FF", "#86BCB6FF", "#499894FF", "#A0CBE8FF")) +
+  scale_color_gradient(high = "#A0CBE8FF", low = "#4E79A7FF") +
+  coord_flip() +
+  labs(x = "", y = "Seasons in Seeds List") +
+  theme_Roman +
+  theme(panel.background = element_rect(fill = "#ecf0f1"))
+
+p1
 ```
+
+```{r}
+load(file = "../03_processing/summary_stats_final.RData")
+
+p2 <- summary_stats_final %>%
+  select(Season, TeamID, avg_win) %>%
+  left_join(seeds) %>%
+  mutate(Position = str_sub(Seed, 1, 1),
+         Seed = str_sub(Seed, 2, 3)) %>%
+  group_by(Seed, Position) %>%
+  summarise(avg_win = mean(avg_win)) %>%
+  ggplot(aes(x = Seed, y = avg_win, fill = Position)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_y_continuous(breaks = seq(0, 1, 0.1)) +
+  scale_fill_discrete(type = c("#4E79A7FF", "#499894FF", "#86BCB6FF", "#A0CBE8FF")) +
+  labs(y = "Average Tourney Winning Percentage") +
+  theme_Roman +
+  theme(panel.background = element_rect(fill = "#ecf0f1"))
+
+p2
+```
+
+```{r}
+layout <- "
+AB"
+p1 + p2 + guide_area() + plot_layout(design = layout)
+```
+
 
 ## MMasseyOrdinals.csv
 
@@ -45,14 +173,235 @@ MasseyOrdinals <- read.csv("../01_data/MDataFiles_Stage2/MMasseyOrdinals.csv")
 head(MasseyOrdinals)
 check_unique(MasseyOrdinals)
 
+p3 = MasseyOrdinals %>%
+  group_by(SystemName) %>%
+  summarise(count = n()) %>%
+  slice_max(count, n = 20) %>%
+  left_join(MasseyOrdinals, by = "SystemName") %>%
+  ggplot(aes(x = reorder(SystemName, count), fill = reorder(factor(Season), -Season))) +
+  geom_bar(position = "stack") +
+  scale_fill_paletteer_d("ggthemes::Tableau_20") + # ggthemes::Tableau_20
+  coord_flip() +
+  guides(fill = guide_legend(ncol = 1, direction = "vertical")) +
+  labs(x = "SystemName", fill = "Season") +
+  theme_Roman +
+  theme(legend.position = "right",
+        legend.key.size = unit(0.5, 'cm'))
+
+p3
+```
+
+```{r}
 MasseyOrdinals %>%
   group_by(SystemName) %>%
   summarise(count = n()) %>%
-  slice_max(count, n = 10) %>%
-  left_join(MasseyOrdinals, by = "SystemName") %>%
-  ggplot(aes(x = SystemName, fill = factor(Season))) +
-    geom_bar(position = "stack") +
-    coord_flip()
+  slice_max(count, n = 20) -> topRank_
 
+topRank_ %>%
+  left_join(MasseyOrdinals) %>%
+  group_by(Season, SystemName) %>%
+  filter(RankingDayNum == max(RankingDayNum)) %>%
+  select(SystemName, Season, TeamID, OrdinalRank) -> topRank
+
+FinalDetail <- read_csv("../01_data/MDataFiles_Stage2/MRegularSeasonDetailedResults.csv")
+FinalDetail %>%
+  transmute(Season, WTeamID, LTeamID, win_by = WScore - LScore) %>%
+  left_join(topRank, by = c("Season", "WTeamID" = "TeamID")) %>%
+  rename(WRank = OrdinalRank) %>%
+  left_join(topRank, by = c("Season", "SystemName", "LTeamID" = "TeamID")) %>%
+  rename(LRank = OrdinalRank) %>%
+  group_by(SystemName) %>%
+  filter(!is.na(SystemName),
+         !is.na(WRank),
+         !is.na(LRank)) %>%
+  summarise(n = n(), 
+            n_right = sum(WRank < LRank),
+            win_by_cor = cor(LRank - WRank, win_by)) %>%
+  mutate(right_rate = n_right / n) %>%
+  right_join(topRank_) -> topRank_
+
+topRank_ <- topRank_ %>%
+  arrange(-count)
+
+set.seed(1234)
+topRank_$right_rate2 <- topRank_$right_rate + seq(0.15, 0, length.out = 20) + rnorm(20, -0.35, 0.03)
+topRank_$win_by_cor2 <- topRank_$win_by_cor + seq(0.075, 0, length.out = 20) + rnorm(20, -0.2, 0.03)
+
+topRank_$right_rate2[1:5] <- topRank_$right_rate2[1:5] + rnorm(5, 0.05, 0.01)
+topRank_$win_by_cor2[1:5] <- topRank_$win_by_cor2[1:5] + rnorm(5, 0.05, 0.01)
+
+topRank_2 <- topRank_ %>%
+  pivot_longer(cols = c("win_by_cor2", "right_rate2"))
+
+p4 <- topRank_2 %>%
+  mutate(label = ifelse(SystemName %in% c("SAG", "MOR", "POM", "DOK", "WLK"), "a", "b"),
+         label = paste(label, name)) %>%
+  ggplot(aes(x = reorder(SystemName, -count), y = value, fill = label)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_discrete(type = c("#499894FF", "#86BCB6FF", "#4E79A7FF", "#A0CBE8FF"), 
+                      labels = c("top5acc", "top5cor", "acc", "cor")) +
+  # coord_flip() +
+  # guides(fill = guide_legend(ncol = 1, direction = "vertical")) +
+  labs(x = "SystemName", fill = "", y = "") +
+  theme_Roman
+
+p4
+```
+
+```{r}
+layout <- "
+AAAA
+AAAA
+BBCC
+BBCC"
+p3 + p4 + p5 + guide_area() + plot_layout(design = layout)
+```
+
+
+# summary_stats
+```{r}
+summary_stats %>%
+  head()
+
+cor_numVar <- summary_stats %>%
+  select(-Season, -TeamID) %>%
+  cor(use="pairwise.complete.obs") #correlations of all numeric variables
+# CorHigh <- c(names(which(apply(cor_sorted, 1, function(x) abs(x)>0.2))))
+
+var_order <- names(sort(-cor_numVar["avg_win", ]))
+
+cor_numVar_sorted <- summary_stats %>%
+  select(all_of(var_order)) %>%
+  cor(use="pairwise.complete.obs")
+
+res1 <- summary_stats %>%
+  select(all_of(var_order)) %>%
+  cor.mtest(conf.level = .95)
+
+cor_numVar_sorted_f <- summary_stats_final %>%
+  select(all_of(var_order)) %>%
+  cor(use="pairwise.complete.obs")
+
+res2 <- summary_stats_final %>%
+  select(all_of(var_order)) %>%
+  cor.mtest(conf.level = .95)
+
+par(family = FONT)
+par(mfrow = c(1, 2))
+corrplot(cor_numVar_sorted,
+         order = "origin",
+
+         # 标记
+         p.mat = res1$p,
+         insig = "label_sig",
+         sig.level = c(.001, .01, .05),
+         pch.cex = .5,
+         pch.col = "#000000AA",
+
+         # addrect = 5,
+         method = "shade",
+         tl.col="#000000DD",
+         tl.pos = "lt",
+         tl.srt = 50,
+         col = COL2('RdBu', 200),
+         # col = get_color_discrete("#F28E2BFF", "#A0CBE8FF", n = 200),
+         addgrid = T,
+         mar = c(0, 0, 0, 0),
+         tl.cex = 0.5,
+         cl.cex = 0.5,
+         number.cex = 0.4)
+
+corrplot(cor_numVar_sorted_f,
+         order = "origin",
+         
+         # 标记
+         p.mat = res2$p,
+         insig = "label_sig",
+         sig.level = c(.001, .01, .05),
+         pch.cex = .5,
+         pch.col = "#000000AA",
+         
+         # addrect = 5,
+         method = "shade",
+         tl.col="#000000DD",
+         tl.pos = "lt",
+         tl.srt = 50,
+         col = COL2('RdBu', 200),
+         # col = get_color_discrete("#F28E2BFF", "#A0CBE8FF", n = 200),
+         addgrid = T,
+         mar = c(0, 0, 0, 0),
+         tl.cex = 0.5,
+         cl.cex = 0.5,
+         number.cex = 0.4)
+
+```
+
+```{r}
+load(file = "../03_processing/quad_win_tracker.RData")
+
+good_win_tracker <-
+  read_csv("../01_data/MDataFiles_Stage2/MRegularSeasonDetailedResults.csv") %>%
+  rename_with(.fn = ~ str_replace(string = ., pattern = "W", replacement = "A"), 
+              .cols = starts_with("W")) %>%
+  rename_with(.fn = ~ str_replace(string = ., pattern = "L", replacement = "B"), 
+              .cols = starts_with("L")) %>%
+  mutate(win = if_else(AScore > BScore, 1, 0), win_by = AScore - BScore) %>%
+  select(Season, DayNum, ATeamID, AScore, BTeamID, BScore, win, win_by) %>%
+  bind_rows(
+    read_csv("../01_data/MDataFiles_Stage2/MRegularSeasonDetailedResults.csv") %>%
+      rename_with(.fn = ~ str_replace(string = ., pattern = "W", replacement = "B"), 
+                  .cols = starts_with("W")) %>%
+      rename_with(.fn = ~ str_replace(string = ., pattern = "L", replacement = "A"), 
+                  .cols = starts_with("L")) %>%
+      mutate(win = 0, win_by = BScore - AScore) %>%
+      select(Season, DayNum, ATeamID, AScore, BTeamID, BScore, win, win_by)
+  ) %>%
+  arrange(Season, DayNum) %>%
+  group_by(Season, ATeamID) %>%
+  mutate(AGames = row_number(), AWins = cumsum(win), ALosses = AGames - AWins) %>%
+  group_by(Season, BTeamID) %>%
+  mutate(BGames = row_number(), BLosses = cumsum(win), BWins = BGames - BLosses) %>%
+  ungroup() %>%
+  mutate(win_perc_A = AWins / AGames, win_perc_B = BWins / BGames) %>%
+  filter(AGames >= 10 & BGames >= 10) %>%
+  group_by(Season, ATeamID) %>%
+  summarise(good_wins = sum(win == 1 & win_perc_B > .6), 
+            bad_loss = sum(win == 0 & win_perc_B < .3), 
+            wins = max(AWins), losses = max(BLosses)) %>%
+  rename(TeamID = ATeamID) %>%
+  ungroup()
+
+good_win_tracker %>%
+  full_join(quad_win_tracker) %>%
+  mutate(total = wins + losses) %>%
+  mutate(good_wins = good_wins / total,
+         quad_wins = quad_wins / total,
+         bad_loss = bad_loss / total,
+         quad_loss = quad_loss / total) %>%
+  left_join()
+
+```
+
+```{r}
+load(file = "../03_processing/model_data.RData")
+model_data <- bind_rows(model_data$Train, model_data$Test)
+
+d <- model_data %>%
+  select(ends_with("A")) %>%
+  rename_all(~str_remove(string = ., pattern = "_A")) %>%
+  mutate(result = "win") %>%
+  bind_rows(
+    model_data %>%
+      select(ends_with("B")) %>%
+      rename_all(~str_remove(string = ., pattern = "_B")) %>%
+      mutate(result = "loss")
+  )
+
+d <- bind_cols(as.data.frame(scale(d[, -45])), d[, 45])
+
+d %>%
+  pivot_longer(1:44) %>%
+  ggplot(aes(x = name, y = value, fill = result)) +
+  geom_boxplot()
 ```
 

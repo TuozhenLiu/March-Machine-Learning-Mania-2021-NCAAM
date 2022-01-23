@@ -1,26 +1,26 @@
 {
     "id": "56FEB75E",
-    "path": "~/Desktop/CUFE/大数据分析统计基础/Final/NCAAM/02_scripts/Execute.R",
+    "path": "~/Desktop/CUFE/统计计算/Final/NCAAM/02_scripts/Execute.R",
     "project_path": "02_scripts/Execute.R",
     "type": "r_source",
-    "hash": "3439469611",
+    "hash": "3182947442",
     "contents": "",
     "dirty": false,
     "created": 1640443019832.0,
     "source_on_save": false,
-    "relative_order": 4,
+    "relative_order": 3,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "50,41",
-        "scrollLine": "45"
+        "cursorPosition": "50,0",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1640531623,
+    "lastKnownWriteTime": 1642833893,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1640531623751,
+    "last_content_update": 1642833893200,
     "read_only": false,
     "read_only_alternatives": []
 }

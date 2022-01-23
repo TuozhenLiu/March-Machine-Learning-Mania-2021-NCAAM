@@ -71,6 +71,8 @@ summary_stats <-
   ungroup() %>%
   rename(avg_win = `in`, avg_win_by = `in_by`) %>%
   relocate(c(avg_win, avg_win_by), .after = last_col())
+save(summary_stats, file = "03_processing/summary_stats.RData")
+
 
 summary_stats_final <-
   read_csv("01_data/MDataFiles_Stage2/MNCAATourneyDetailedResults.csv") %>%
@@ -98,6 +100,8 @@ summary_stats_final <-
   ungroup() %>%
   rename(avg_win = `in`, avg_win_by = `in_by`) %>%
   relocate(c(avg_win, avg_win_by), .after = last_col())
+save(summary_stats_final, file = "03_processing/summary_stats_final.RData")
+
 
 ranking_data <-
   read_csv("01_data/External/ranking_data.csv", guess_max = 10000) %>%
@@ -110,6 +114,7 @@ ranking_data <-
     col, ratingschedule_strength_by_other, overallpercent_of_points_from_3_pointers, 
     last3_change, t3_week_rank_avg
   )
+save(ranking_data, file = "03_processing/ranking_data.RData")
 
 quality_win_tracker <-
   read_csv("01_data/MDataFiles_Stage2/MRegularSeasonDetailedResults.csv") %>%

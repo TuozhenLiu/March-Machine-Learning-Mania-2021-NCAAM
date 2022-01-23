@@ -1,9 +1,9 @@
 {
     "id": "FD2A99C1",
-    "path": "~/Desktop/CUFE/大数据分析统计基础/Final/NCAAM/02_scripts/Utils.R",
+    "path": "~/Desktop/CUFE/统计计算/Final/NCAAM/02_scripts/Utils.R",
     "project_path": "02_scripts/Utils.R",
     "type": "r_source",
-    "hash": "3984384251",
+    "hash": "4099762511",
     "contents": "",
     "dirty": false,
     "created": 1640443028037.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "225,8",
-        "scrollLine": "208"
+        "cursorPosition": "178,77",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1640531586,
+    "lastKnownWriteTime": 1642583846,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1640531586755,
+    "last_content_update": 1642583846982,
     "read_only": false,
     "read_only_alternatives": []
 }

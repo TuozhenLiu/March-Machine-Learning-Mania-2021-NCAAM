@@ -39,7 +39,7 @@ register_make_execute_evaluate <- function(data = stats,
   set.seed(seed)
   output <- list()
   
-  load(file = "processing/formula.RData")
+  load(file = "03_processing/formula.RData")
   regression_formula_type <- regression_formula
   regression_formula <- as.formula(formula[[regression_formula]])
   
